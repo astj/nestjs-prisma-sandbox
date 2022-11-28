@@ -3,6 +3,7 @@ import {
   Logger,
   Module,
   OnApplicationShutdown,
+  OnModuleDestroy,
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -16,9 +17,13 @@ import { UserService } from './user.service';
   providers: [AppService, UserService, PostService, PrismaService],
 })
 export class AppModule
-  implements OnApplicationShutdown, BeforeApplicationShutdown
+  implements OnApplicationShutdown, BeforeApplicationShutdown, OnModuleDestroy
 {
   private readonly logger = new Logger(AppModule.name);
+
+  onModuleDestroy() {
+    this.logger.log('onModuleDestroy called!');
+  }
 
   beforeApplicationShutdown(signal?: string) {
     this.logger.log(`beforeApplicationShutdown called! ${signal}`);
